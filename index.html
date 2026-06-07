@@ -774,12 +774,17 @@
       updateUI();
 
       // Core Game Tick (Income generation)
+      let lastTickTime = Date.now();
       setInterval(() => {
+        const now = Date.now();
+        const delta = (now - lastTickTime) / 1000;
+        lastTickTime = now;
+
         calculateIncome();
-        money += income / 10;
+        money += income * delta;
         updateHeaderMoney();
         checkPrestigeAllowance();
-      }, 100);
+      }, 1000);
 
       // Simulation ticks
       let tickCount = 0;
