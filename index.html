@@ -1063,9 +1063,26 @@
     }
     
     function sellAllStocks() {
-      let val = 0;
-      for(let key in stocks) { val += stocks[key].count * stocks[key].price; stocks[key].count = 0; document.getElementById("count_"+key).textContent = 0; }
-      money += val; calculateIncome(); updateHeaderMoney();
+      let totalHeld = 0;
+      for (let key in stocks) totalHeld += stocks[key].count;
+      if (totalHeld === 0) {
+        notify("No Positions", "No active security positions to liquidate.", "negative");
+        return;
+      }
+
+      const confirmed = confirm("WARNING: Are you sure you want to liquidate all security positions? This will sell all held units at current market prices.");
+      if (confirmed) {
+        let val = 0;
+        for(let key in stocks) { 
+          val += stocks[key].count * stocks[key].price; 
+          stocks[key].count = 0; 
+          document.getElementById("count_"+key).textContent = 0; 
+        }
+        money += val; 
+        calculateIncome(); 
+        updateHeaderMoney();
+        notify("Positions Liquidated", "All stock holdings have been liquidated successfully.", "positive");
+      }
     }
 
     // --- Prestige System Logic ---
